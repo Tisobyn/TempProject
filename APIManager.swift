@@ -44,15 +44,15 @@ class APIManager {
             }
 //            print("APIManager.request.AF.type.url =\(type.url)")
             switch response.result {
-            case let .success(value):
-//                    print("APIManager.request.AF.success =\(value)")
+            case let .success(_):
+//                    print("APIManager.request.AF.success = \(value)")
                     let decoder = JSONDecoder()
 //                    print("APIManager.request.AF.success.decoder =\(decoder)")
                     if let data = response.data {
 //                        print("APIManager.request.AF.success.data =\(data)")
                         if let jsonResult = try? decoder.decode(T.self, from: data) {
                             handler(.success(jsonResult))
-                            print("APIManager.request.AF.success.data.jsonResult =\(jsonResult)")
+//                            print("APIManager.request.AF.success.data.jsonResult =\(jsonResult)")
                         }else{
                             let error = ResponseError(errorCode: 999, errorMessage: FailureError.jsonEncodingFailed.rawValue)
                             print("APIManager.request.AF.success.data.error =\(error)")

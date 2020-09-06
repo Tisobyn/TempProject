@@ -79,7 +79,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     var lat = UserDefaults.standard.double(forKey: "lat") 
     var lon = UserDefaults.standard.double(forKey: "lon") 
     var locationManager = CLLocationManager()
-    let weatherViewModel: WeatherViewModel = WeatherViewModel()
+    let weatherVM: WeatherViewModel = WeatherViewModel()
 
     
     override func viewDidLoad() {
@@ -134,29 +134,28 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     }
     
     func updateWeather(latitude: Double, longitude: Double){
-        weatherViewModel.Weather.removeAll()
-        weatherViewModel.getWeatherData(lat: latitude, lon: longitude)
+        weatherVM.getWeatherData(lat: latitude, lon: longitude)
 //        print("weatherViewMode.getWeatherData: + \(weatherViewModel.getWeatherData(lat: lat, lon: lon))")
-        let data = weatherViewModel.Weather
-        print("ViewController.wetherViewNodelData.Weather = \(data)")
-//        self.locationLabel.text = data.name ?? "Almaty"
-//        self.conditionLabel.text = data.weather.main ?? "Sunny"
-//        let iconName = data.weather.icon ?? "01d"
-//        self.conditionImageView.image = UIImage(named: iconName)
-//        self.tempLabel.text = "\(Int(round((data.main?.temp) ?? 0)))"
-//
-//        let date = Date()
-//        let dateFormatter = DateFormatter()
-//        dateFormatter.dateFormat = "EEEE"
-//        self.dayLabel.text = dateFormatter.string(from: date)
-//
-//        let suffix = iconName.suffix(1)
-//        if(suffix == "n"){
-//            self.setGrayGradientBackground()
-//        }else{
-//            self.setBlueGradientBackground()
-//        }
-//        self.activityIndicator.stopAnimating()
+        let data = weatherVM.weather
+
+        self.locationLabel.text = data?.name ?? "Almaty"
+        self.conditionLabel.text = data?.weather[0].main ?? "Sunny"
+        let iconName = data?.weather[0].icon ?? "01d"
+        self.conditionImageView.image = UIImage(named: iconName)
+        self.tempLabel.text = "\(Int(round((data?.main.temp) ?? 0)))"
+
+        let date = Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "EEEE"
+        self.dayLabel.text = dateFormatter.string(from: date)
+
+        let suffix = iconName.suffix(1)
+        if(suffix == "n"){
+            self.setGrayGradientBackground()
+        }else{
+            self.setBlueGradientBackground()
+        }
+        self.activityIndicator.stopAnimating()
     }
     func addSubviews() {
         self.view.addSubview(backgroundView)

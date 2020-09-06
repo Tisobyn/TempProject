@@ -1,70 +1,89 @@
-// This file was generated from JSON Schema using quicktype, do not modify it directly.
-// To parse the JSON, add this file to your project and do:
-//
-//   let weather = try? newJSONDecoder().decode(Weather.self, from: jsonData)
 
 import Foundation
 
-// MARK: - Weather
-struct Weather: Codable {
+struct WeatherResponce: Codable {
     var coord: Coord?
-    var weather: [WeatherElement]?
+    var weather: [Weather]
     var base: String?
-    var main: Main?
+    var main: Main
+    var visibility: Int?
     var wind: Wind?
     var clouds: Clouds?
-    var dt: Int?
-    var sys: Sys?
-    var timezone, id: Int?
+    var snow: Snow?
+    var dt: Int
+    var sys: Sys
+    var id: Int?
     var name: String?
     var cod: Int?
-}
-
-// MARK: - Clouds
-struct Clouds: Codable {
-    var all: Int?
-}
-
-// MARK: - Coord
-struct Coord: Codable {
-    var lon, lat: Int?
-}
-
-// MARK: - Main
-struct Main: Codable {
-    var temp, feelsLike, tempMin, tempMax: Double?
-    var pressure, humidity: Int?
-
-    enum CodingKeys: String, CodingKey {
-        case temp
-        case feelsLike = "feels_like"
-        case tempMin = "temp_min"
-        case tempMax = "temp_max"
-        case pressure, humidity
+    
+    func iconName() -> String{
+        guard let currentWeather = weather.first else {
+            assertionFailure("Bad weather model!")
+            return ""
+        }
+        return currentWeather.main.lowercased()
     }
+    
 }
 
-// MARK: - Sys
+struct ForecastResponse: Codable {
+    var cod: String
+    var message: Double
+    var cnt: Int
+    var list: [WeatherResponce]
+    var city: CityResponce
+    
+    func fullLocation() -> String {
+        return "\(city.name), \(city.country)"
+    }
+    
+}
+
+struct CityResponce: Codable {
+    var id: Int
+    var name: String
+    var coord: Coord
+    var country: String
+    var population: Int?
+}
+
+struct Coord: Codable {
+    var lon: Double
+    var lat: Double
+}
+
+struct Weather: Codable {
+    var id: Int
+    var main: String
+    var description: String
+    var icon: String
+}
+struct Main: Codable {
+    var temp: Double
+    var pressure: Double
+    var humidity: Double
+    var tempMin: Double?
+    var tempMax: Double?
+}
+
+struct Wind: Codable {
+    var speed: Double
+    var deg: Double?
+}
+
+struct Clouds: Codable {
+    var all: Int
+}
+
+struct Snow: Codable {
+    var threeH: Double?
+}
+
 struct Sys: Codable {
-    var type, id: Int?
+    var type: Int?
+    var id: Int?
     var message: Double?
     var country: String?
-    var sunrise, sunset: Int?
-}
-
-// MARK: - WeatherElement
-struct WeatherElement: Codable {
-    var id: Int?
-    var main, weatherDescription, icon: String?
-
-    enum CodingKeys: String, CodingKey {
-        case id, main
-        case weatherDescription = "description"
-        case icon
-    }
-}
-
-// MARK: - Wind
-struct Wind: Codable {
-    var speed, deg: Double?
+    var sunrise: Int?
+    var sunset: Int?
 }
